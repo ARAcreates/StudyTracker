@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Execution Tracker</title>
+    <!-- Tailwind for styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React and Babel for browser-side compilation -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body class="bg-gray-50">
+    <div id="root"></div>
+
+    <!-- 
+      Kyunki hum browser mein bina build step ke chala rahe hain, 
+      isliye humne Babel standalone aur UMD builds use kiye hain.
+    -->
+    <script type="text/babel" data-type="module">
+        // Humne App.jsx ka code yahan inline ya script tag ke through handle karna hoga
+        // Par Canvas environment mein hum direct imports ko support karne ke liye esm.sh use karte hain
+        
+        import React from 'https://esm.sh/react@18.2.0';
+        import ReactDOM from 'https://esm.sh/react-dom@18.2.0/client';
+        import App from './App.jsx';
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(React.createElement(App));
+    </script>
+</body>
+</html>
