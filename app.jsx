@@ -33,7 +33,16 @@ import {
 } from 'lucide-react';
 
 // --- Firebase Configuration ---
-const firebaseConfig = JSON.parse(__firebase_config);
+// Note: Replace the empty string or __firebase_config with your actual Firebase project config object
+const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
+  apiKey: "",
+  authDomain: "",
+  projectId: "",
+  storageBucket: "",
+  messagingSenderId: "",
+  appId: ""
+};
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -80,15 +89,12 @@ const App = () => {
   const [isAddingSubject, setIsAddingSubject] = useState(false);
   const [authError, setAuthError] = useState(null);
 
-  // Auth Initialization and Listener (Rule 3)
   useEffect(() => {
     const initAuth = async () => {
       try {
-        // First try Custom Token if available
         if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
           await signInWithCustomToken(auth, __initial_auth_token);
         } else {
-          // Automatic Anonymous login to prevent domain errors blocking app usage
           await signInAnonymously(auth);
         }
       } catch (e) {
@@ -116,7 +122,7 @@ const App = () => {
             }
           }
         } catch (err) {
-          setUser(u); // Proceed even if profile fetch fails
+          setUser(u);
         }
       } else {
         setUser(null);
@@ -127,7 +133,6 @@ const App = () => {
     return () => unsubscribe();
   }, []);
 
-  // Data Sync (Rule 1 & 2)
   useEffect(() => {
     if (!user) {
       setSubjects([]);
@@ -157,7 +162,6 @@ const App = () => {
           message: "Google sign-in is blocked because this environment's domain isn't in your Firebase allowlist.",
           domain: window.location.hostname
         });
-        // Stay logged in as anonymous so app doesn't break
       } else {
         setAuthError({ title: "Sign-in Failed", message: error.message });
       }
@@ -207,7 +211,6 @@ const App = () => {
     </div>
   );
 
-  // If we have an auth error but a user (anonymous), we show a notice but let them use the app
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col max-w-xl mx-auto border-x border-gray-100 font-sans pb-32 shadow-2xl relative">
       <header className="px-6 py-6 flex justify-between items-center bg-white/80 backdrop-blur sticky top-0 z-20 border-b border-gray-100">
